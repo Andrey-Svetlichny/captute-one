@@ -7,9 +7,10 @@ use scripting additions
 set resultLogging to true -- log non default adjustments in the script editor log
 set runAllTests to true -- if false, stop checking for adjustments after the first no-defult setting is found
 set resultsInCollections to false -- add adjusted and non-adjusted images to a collection
-set AdjustmentLabelsInMetadata to true -- Information is added to the IPTC Getty Images fields - what and how many Adjustments are detected
+set AdjustmentLabelsInMetadata to false -- Information is added to the IPTC Getty Images fields - what and how many Adjustments are detected
 set AdjustmentValuesInMetadata to false -- Information is added to the IPTC Contacts fields - adjustment values the user wants to search on
 set logEveryAdjustment to false -- report every setting value in the script editor log -  very long listing - do this only for a few images
+set resetAdjustmentsOfNonAdjusted to true -- reset adjustments of non-adjusted images
 
 ## FUNCTIONS
 ## if there are no selected variants, all variants in the current collection are processed
@@ -369,6 +370,11 @@ repeat with theVariant in theVariantList
 
     ## Now this variant is assessed. Do something with the results
     if not variantIsAdjusted then
+        if resetAdjustmentsOfNonAdjusted then
+            tell application "Capture One"
+			    reset adjustments of theVariant
+		    end tell
+        end if
         set theAdjustmentTag to "Not_Adjusted"
         if resultLogging then
             log theVariantName & " has no Adjustments"
