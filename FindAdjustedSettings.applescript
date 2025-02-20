@@ -430,10 +430,40 @@ set theSelectedVariantList to {}
 #####################   Handlers
 
 on resetAdjustments(theVariant)
-    tell application "Capture One"
-		reset adjustments of theVariant
+    local theProperties, theLabel, theValue, theValueOrig
+
+	# get properties
+	tell application "Capture One" to tell adjustments of theVariant to set theProperties to get properties
+	tell my recordLabelsAndValues3(theProperties)
+		set therecordLabels to its recordLabels
+		set theRecordValuesOrig to its its recordValues
 	end tell
+
+	# reset adjustments
+	tell application "Capture One" to reset adjustments of theVariant
+
+	# get properties again
+	tell application "Capture One" to tell adjustments of theVariant to set theProperties to get properties
+	tell my recordLabelsAndValues3(theProperties)
+		set therecordValues to its its recordValues
+	end tell
+
+	# compare and stop if difference found
+	set theId to 1
+	repeat with theLabel in therecordLabels
+		set theValueOrig to (get item (theId) of theRecordValuesOrig)
+		set theValue to (get item (theId) of therecordValues)
+		if theValueOrig ≠ theValue then
+			log ("Property CHANGED during resetAdjustments: " & theLabel)
+			log (theValueOrig)
+			log (theValue)
+			error number -128
+		end if
+		set theId to theId + 1
+	end repeat
+
 end resetAdjustments
+
 
 on checkAdjustmentParams(enableFlag, theName, theTest)
     global variantIsAdjusted, therecordLabels, therecordValues, adjustmentList, resultLogging, runAllTests, countAdjustments, logEveryAdjustment, adjustmentListTag
