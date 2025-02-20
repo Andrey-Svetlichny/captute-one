@@ -371,9 +371,7 @@ repeat with theVariant in theVariantList
     ## Now this variant is assessed. Do something with the results
     if not variantIsAdjusted then
         if resetAdjustmentsOfNonAdjusted then
-            tell application "Capture One"
-			    reset adjustments of theVariant
-		    end tell
+            resetAdjustments(theVariant)
         end if
         set theAdjustmentTag to "Not_Adjusted"
         if resultLogging then
@@ -430,6 +428,12 @@ tell application "Capture One" to select currentDocRef variants theSelectedVaria
 set theSelectedVariantList to {}
 
 #####################   Handlers
+
+on resetAdjustments(theVariant)
+    tell application "Capture One"
+		reset adjustments of theVariant
+	end tell
+end resetAdjustments
 
 on checkAdjustmentParams(enableFlag, theName, theTest)
     global variantIsAdjusted, therecordLabels, therecordValues, adjustmentList, resultLogging, runAllTests, countAdjustments, logEveryAdjustment, adjustmentListTag
