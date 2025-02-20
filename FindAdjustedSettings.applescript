@@ -299,7 +299,7 @@ repeat with theVariant in theVariantList
     --log therecordLabels
     --log therecordValues
 
-    checkAdjustmentParams(false, "orientation", 0.0)
+    checkAdjustmentParams(true, "orientation", 0.0)
     checkAdjustmentParams(enableColorProfile, "color profile", defaultColorProfile)
     checkAdjustmentParams(false, "temperature", 0.0)
     checkAdjustmentParams(false, "tint", 0.0)
